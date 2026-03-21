@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Deutsch">
+  <title>Deutsch Lernen</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ══════════════════════════════════════════════════════
+       HOME SCREEN
+  ══════════════════════════════════════════════════════ -->
+  <div id="screen-home" class="screen">
+    <div class="screen-header">
+      <h1>Deutsch Lernen</h1>
+      <button class="settings-icon-btn" onclick="showScreen('settings')" title="Settings">⚙️</button>
+    </div>
+    <div class="home-content">
+
+      <div class="streak-card">
+        <div class="streak-flame">🔥</div>
+        <div class="streak-info">
+          <div class="streak-number" id="streak-count">0</div>
+          <div class="streak-label">Day Streak</div>
+          <div class="streak-sub" id="streak-longest">Best: 0 days</div>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-number" id="stat-learned">0</div>
+          <div class="stat-label">Learned</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="stat-review">0</div>
+          <div class="stat-label">Reviewing</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="stat-new">0</div>
+          <div class="stat-label">New</div>
+        </div>
+      </div>
+
+      <div id="done-today-msg" class="done-today-msg hidden">
+        ✅ Great work today! Come back tomorrow to keep your streak going.
+      </div>
+
+      <button id="start-btn" class="start-btn" onclick="startSession()">
+        Start Today's Session
+      </button>
+      <div class="session-note">~15 minutes · 62 words to learn</div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       SESSION SCREEN
+  ══════════════════════════════════════════════════════ -->
+  <div id="screen-session" class="screen">
+
+    <div class="session-top-bar">
+      <button class="close-session-btn" onclick="endSessionEarly()" title="End session">✕</button>
+      <span id="session-timer" class="session-timer">15:00</span>
+      <div class="progress-wrapper">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <div class="progress-label" id="progress-label">0 / 0</div>
+      </div>
+    </div>
+
+    <!-- Active flashcard area -->
+    <div id="flashcard-area" class="flashcard-area">
+
+      <div class="flashcard" onclick="handleCardTap()">
+
+        <!-- FRONT -->
+        <div id="card-front-face" class="card-face">
+          <span class="card-tag" id="card-tag">WORD</span>
+          <div class="card-german" id="card-german">...</div>
+          <div class="audio-row">
+            <button class="audio-btn" onclick="event.stopPropagation(); speakCurrentWord()">🔊 Hear it</button>
+            <span class="tap-hint">Tap card to reveal</span>
+          </div>
+        </div>
+
+        <!-- BACK -->
+        <div id="card-back-face" class="card-face hidden">
+          <span class="card-tag" id="card-tag-back">WORD</span>
+          <div class="card-back">
+            <div class="card-english" id="card-english">...</div>
+            <div class="card-divider"></div>
+            <div class="example-block">
+              <div class="example-de" id="card-example-de"></div>
+              <div class="example-audio-row">
+                <button class="audio-btn-sm" onclick="event.stopPropagation(); speakCurrentExample()">🔊 Hear sentence</button>
+              </div>
+              <div class="example-en" id="card-example-en"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Reveal button (shown on front) -->
+    <div id="reveal-area" class="reveal-area">
+      <button class="reveal-btn" onclick="revealCard()">Reveal Answer</button>
+    </div>
+
+    <!-- Rating buttons (shown on back) -->
+    <div id="rating-area" class="rating-area hidden">
+      <button class="rating-btn missed" onclick="rateCard('missed')">✕<br>Missed it</button>
+      <button class="rating-btn unsure" onclick="rateCard('unsure')">?<br>Not sure</button>
+      <button class="rating-btn got-it" onclick="rateCard('got-it')">✓<br>Got it!</button>
+    </div>
+
+    <!-- Session complete screen (hidden until end) -->
+    <div id="session-complete" class="session-complete hidden">
+      <div class="complete-emoji">🎉</div>
+      <div class="complete-title">Session Complete!</div>
+      <div class="complete-stats">
+        <div class="complete-stat-row">
+          <span>Cards studied</span>
+          <span id="complete-studied">0</span>
+        </div>
+        <div class="complete-stat-row">
+          <span>Correct answers</span>
+          <span id="complete-correct">0</span>
+        </div>
+        <div class="complete-stat-row">
+          <span>Accuracy</span>
+          <span id="complete-pct">0%</span>
+        </div>
+        <div class="complete-stat-row">
+          <span>Current streak</span>
+          <span id="complete-streak">1 day</span>
+        </div>
+      </div>
+      <button class="complete-done-btn" onclick="showScreen('home')">Back to Home</button>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       WORDS SCREEN
+  ══════════════════════════════════════════════════════ -->
+  <div id="screen-words" class="screen">
+    <div class="screen-header">
+      <h2>My Vocabulary</h2>
+    </div>
+    <div class="filter-tabs">
+      <button class="filter-tab active" data-filter="all" onclick="renderWordList('all')">All (62)</button>
+      <button class="filter-tab" data-filter="learning" onclick="renderWordList('learning')">Learning</button>
+      <button class="filter-tab" data-filter="learned" onclick="renderWordList('learned')">Learned</button>
+      <button class="filter-tab" data-filter="new" onclick="renderWordList('new')">Not started</button>
+    </div>
+    <div class="words-list" id="words-list"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       ASK SCREEN
+  ══════════════════════════════════════════════════════ -->
+  <div id="screen-ask" class="screen">
+    <div class="screen-header">
+      <h2>Ask a Question</h2>
+    </div>
+
+    <div class="ask-inner">
+      <div class="chat-area" id="chat-area">
+        <div class="chat-bubble assistant">
+          Hi! Ask me anything about German — grammar rules, tricky words, pronunciation tips, or anything else. For example:<br><br>
+          <em>"When do I use der, die or das?"</em><br>
+          <em>"What is the difference between seit and vor?"</em><br>
+          <em>"How do I use the Dativ case?"</em>
+        </div>
+      </div>
+
+      <div id="no-key-banner" class="no-key-banner hidden">
+        ⚠️ No API key saved yet. Add your Claude API key in Settings to use this feature.
+        <button onclick="showScreen('settings')">Go to Settings</button>
+      </div>
+
+      <div id="chat-input-bar" class="chat-input-bar hidden">
+        <input
+          type="text"
+          id="ask-input"
+          placeholder="Ask a German question..."
+          onkeypress="handleAskKeypress(event)"
+          autocomplete="off"
+          autocorrect="off"
+          spellcheck="false"
+        >
+        <button class="send-btn" onclick="sendQuestion()">➤</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       SETTINGS SCREEN
+  ══════════════════════════════════════════════════════ -->
+  <div id="screen-settings" class="screen">
+    <div class="screen-header">
+      <button class="back-btn" onclick="showScreen('home')">← Back</button>
+      <h2>Settings</h2>
+      <span></span>
+    </div>
+    <div class="settings-content">
+
+      <div class="settings-section">
+        <h3>Claude API Key</h3>
+        <p>Required for the "Ask a Question" feature. Your key is saved only on this device — never sent anywhere except Anthropic's servers when you ask a question.</p>
+        <input type="password" id="api-key-input" placeholder="Paste your key here (sk-ant-...)">
+        <button class="save-btn" onclick="saveApiKey()">Save Key</button>
+        <div class="key-status" id="key-status"></div>
+      </div>
+
+      <div class="settings-section">
+        <h3>About</h3>
+        <p>Deutsch Lernen — your personal German practice app. 62 A2/B1 vocabulary words with spaced repetition, audio, and AI-powered grammar help.</p>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- ── BOTTOM NAVIGATION ──────────────────────────────────── -->
+<nav class="bottom-nav" id="bottom-nav">
+  <button class="nav-btn active" data-screen="home" onclick="showScreen('home')">
+    <span class="nav-icon">🏠</span>
+    <span>Home</span>
+  </button>
+  <button class="nav-btn" data-screen="words" onclick="showScreen('words')">
+    <span class="nav-icon">📚</span>
+    <span>Words</span>
+  </button>
+  <button class="nav-btn" data-screen="ask" onclick="showScreen('ask')">
+    <span class="nav-icon">💬</span>
+    <span>Ask</span>
+  </button>
+</nav>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
