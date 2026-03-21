@@ -201,9 +201,9 @@ function startSession() {
 }
 
 function renderCard() {
-  // Hide completion screen if visible
   document.getElementById('session-complete').classList.add('hidden');
   document.getElementById('flashcard-area').classList.remove('hidden');
+  document.getElementById('feedback-bar').classList.add('hidden');
 
   const total = session.cards.length;
   const idx = session.currentIndex;
@@ -219,62 +219,73 @@ function renderCard() {
   document.getElementById('progress-fill').style.width = pct + '%';
   document.getElementById('progress-label').textContent = idx + ' / ' + total;
 
-  // Card front
   document.getElementById('card-tag').textContent = word.partOfSpeech.toUpperCase();
   document.getElementById('card-german').textContent = word.german;
-  document.getElementById('card-english').textContent = word.english;
-  document.getElementById('card-example-de').textContent = word.exampleDE;
-  document.getElementById('card-example-en').textContent = word.exampleEN;
 
-  // Reset to front
-  document.getElementById('card-front-face').classList.remove('hidden');
-  document.getElementById('card-back-face').classList.add('hidden');
-  document.getElementById('rating-area').classList.add('hidden');
-  document.getElementById('reveal-area').classList.remove('hidden');
-
-  session.revealed = false;
+  // Build 3 options: correct + 2 random wrong answers
+  const options = buildOptions(word);
+  const optionsArea = document.getElementById('options-area');
+  optionsArea.innerHTML = options.map(opt => `
+    <button class="option-btn" data-word-id="${opt.id}" onclick="selectOption(${opt.id})">
+      ${opt.english}
+    </button>
+  `).join('');
 }
 
-function revealCard() {
-  document.getElementById('card-front-face').classList.add('hidden');
-  document.getElementById('card-back-face').classList.remove('hidden');
-  document.getElementById('reveal-area').classList.add('hidden');
-  document.getElementById('rating-area').classList.remove('hidden');
-  session.revealed = true;
+function buildOptions(correctWord) {
+  const others = VOCABULARY.filter(w => w.id !== correctWord.id);
+  const wrong = shuffle(others).slice(0, 2);
+  return shuffle([correctWord, ...wrong]);
 }
 
-function handleCardTap() {
-  if (!session.revealed) revealCard();
-}
-
-function rateCard(rating) {
-  const word = session.cards[session.currentIndex];
-  const p = state.wordProgress[word.id];
+function selectOption(selectedId) {
+  const correctWord = session.cards[session.currentIndex];
+  const isCorrect = selectedId === correctWord.id;
   const today = getTodayStr();
 
-  if (rating === 'got-it') {
+  // Disable all buttons and colour them
+  document.querySelectorAll('.option-btn').forEach(btn => {
+    btn.disabled = true;
+    const btnId = parseInt(btn.dataset.wordId);
+    if (btnId === correctWord.id) {
+      btn.classList.add('correct');
+    } else if (btnId === selectedId) {
+      btn.classList.add('wrong');
+    }
+  });
+
+  // Update word progress
+  const p = state.wordProgress[correctWord.id];
+  if (isCorrect) {
     p.confidence = Math.min(5, (p.confidence || 0) + 1);
     p.correct = (p.correct || 0) + 1;
     session.correct++;
-  } else if (rating === 'unsure') {
-    if ((p.confidence || 0) === 0) p.confidence = 1;
-    p.confidence = Math.min(p.confidence, 2); // cap at 2
-    p.wrong = (p.wrong || 0) + 1;
-  } else if (rating === 'missed') {
+  } else {
     p.confidence = Math.max(1, (p.confidence || 1) - 1);
     p.wrong = (p.wrong || 0) + 1;
   }
 
-  // Review intervals: [same-day, 1d, 3d, 7d, 14d, 30d] for confidence 0-5
   const intervals = [0, 1, 3, 7, 14, 30];
-  const interval = intervals[p.confidence] ?? 1;
-  p.nextReview = addDays(today, interval);
+  p.nextReview = addDays(today, intervals[p.confidence] ?? 1);
   p.lastSeen = today;
-
   saveState();
 
-  session.currentIndex++;
-  renderCard();
+  // Show feedback with example sentence
+  const bar = document.getElementById('feedback-bar');
+  if (isCorrect) {
+    bar.className = 'feedback-bar correct';
+    bar.innerHTML = `✓ Correct! &nbsp;<em>${correctWord.exampleDE}</em>`;
+  } else {
+    bar.className = 'feedback-bar wrong';
+    bar.innerHTML = `✗ It was: <strong>${correctWord.english}</strong> &nbsp;·&nbsp; <em>${correctWord.exampleDE}</em>`;
+  }
+  bar.classList.remove('hidden');
+
+  // Auto-advance after 1.6 seconds
+  setTimeout(() => {
+    session.currentIndex++;
+    renderCard();
+  }, 1600);
 }
 
 // ── Timer ─────────────────────────────────────────────────

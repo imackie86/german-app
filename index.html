@@ -78,47 +78,22 @@
     <!-- Active flashcard area -->
     <div id="flashcard-area" class="flashcard-area">
 
-      <div class="flashcard" onclick="handleCardTap()">
-
-        <!-- FRONT -->
-        <div id="card-front-face" class="card-face">
+      <div class="flashcard">
+        <div class="card-face">
           <span class="card-tag" id="card-tag">WORD</span>
           <div class="card-german" id="card-german">...</div>
           <div class="audio-row">
-            <button class="audio-btn" onclick="event.stopPropagation(); speakCurrentWord()">🔊 Hear it</button>
-            <span class="tap-hint">Tap card to reveal</span>
+            <button class="audio-btn" onclick="speakCurrentWord()">🔊 Hear it</button>
           </div>
         </div>
-
-        <!-- BACK -->
-        <div id="card-back-face" class="card-face hidden">
-          <span class="card-tag" id="card-tag-back">WORD</span>
-          <div class="card-back">
-            <div class="card-english" id="card-english">...</div>
-            <div class="card-divider"></div>
-            <div class="example-block">
-              <div class="example-de" id="card-example-de"></div>
-              <div class="example-audio-row">
-                <button class="audio-btn-sm" onclick="event.stopPropagation(); speakCurrentExample()">🔊 Hear sentence</button>
-              </div>
-              <div class="example-en" id="card-example-en"></div>
-            </div>
-          </div>
-        </div>
-
       </div>
-    </div>
 
-    <!-- Reveal button (shown on front) -->
-    <div id="reveal-area" class="reveal-area">
-      <button class="reveal-btn" onclick="revealCard()">Reveal Answer</button>
-    </div>
+      <!-- 3 multiple choice options -->
+      <div id="options-area" class="options-area"></div>
 
-    <!-- Rating buttons (shown on back) -->
-    <div id="rating-area" class="rating-area hidden">
-      <button class="rating-btn missed" onclick="rateCard('missed')">✕<br>Missed it</button>
-      <button class="rating-btn unsure" onclick="rateCard('unsure')">?<br>Not sure</button>
-      <button class="rating-btn got-it" onclick="rateCard('got-it')">✓<br>Got it!</button>
+      <!-- Feedback bar shown after answering -->
+      <div id="feedback-bar" class="feedback-bar hidden"></div>
+
     </div>
 
     <!-- Session complete screen (hidden until end) -->
