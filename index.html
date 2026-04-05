@@ -51,10 +51,15 @@
         ✅ Great work today! Come back tomorrow to keep your streak going.
       </div>
 
-      <button id="start-btn" class="start-btn" onclick="startSession()">
+      <div class="mode-toggle">
+        <button class="mode-btn active" id="mode-normal" onclick="setSessionMode('normal')">📖 Normal</button>
+        <button class="mode-btn" id="mode-listen" onclick="setSessionMode('listen')">👂 Listening</button>
+      </div>
+
+      <button id="start-btn" class="start-btn" onclick="startNormalSession()">
         Start Today's Session
       </button>
-      <div class="session-note">~15 minutes · 62 words to learn</div>
+      <div class="session-note" id="session-note">~15 minutes · loading...</div>
 
     </div>
   </div>
@@ -67,6 +72,7 @@
     <div class="session-top-bar">
       <button class="close-session-btn" onclick="endSessionEarly()" title="End session">✕</button>
       <span id="session-timer" class="session-timer">15:00</span>
+      <button class="slow-mode-btn" id="slow-mode-btn" onclick="toggleSlowMode()" title="Slow mode">🐢</button>
       <div class="progress-wrapper">
         <div class="progress-bar">
           <div class="progress-fill" id="progress-fill"></div>
@@ -83,7 +89,8 @@
           <span class="card-tag" id="card-tag">WORD</span>
           <div class="card-german" id="card-german">...</div>
           <div class="audio-row">
-            <button class="audio-btn" onclick="speakCurrentWord()">🔊 Hear it</button>
+            <button class="audio-btn" onclick="speakCurrentWord()">🔊 Word</button>
+            <button class="audio-btn audio-btn-sentence" onclick="speakCurrentExample()">🔊 Sentence</button>
           </div>
         </div>
       </div>
@@ -131,7 +138,7 @@
       <h2>My Vocabulary</h2>
     </div>
     <div class="filter-tabs">
-      <button class="filter-tab active" data-filter="all" onclick="renderWordList('all')">All (62)</button>
+      <button class="filter-tab active" data-filter="all" onclick="renderWordList('all')">All</button>
       <button class="filter-tab" data-filter="learning" onclick="renderWordList('learning')">Learning</button>
       <button class="filter-tab" data-filter="learned" onclick="renderWordList('learned')">Learned</button>
       <button class="filter-tab" data-filter="new" onclick="renderWordList('new')">Not started</button>
@@ -198,9 +205,38 @@
 
       <div class="settings-section">
         <h3>About</h3>
-        <p>Deutsch Lernen — your personal German practice app. 62 A2/B1 vocabulary words with spaced repetition, audio, and AI-powered grammar help.</p>
+        <p id="about-text">Deutsch Lernen — your personal German practice app. A2/B1 vocabulary words with spaced repetition, audio, and AI-powered grammar help.</p>
       </div>
 
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       COURSES SCREEN
+  ══════════════════════════════════════════════════════ -->
+  <div id="screen-courses" class="screen">
+    <div class="screen-header">
+      <h2>Courses</h2>
+    </div>
+    <p class="courses-intro">Pick a topic to study, then practise its words.</p>
+    <div class="courses-list" id="courses-list"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       LESSON SCREEN
+  ══════════════════════════════════════════════════════ -->
+  <div id="screen-lesson" class="screen">
+    <div class="screen-header">
+      <button class="back-btn" onclick="showScreen('courses')">← Back</button>
+      <h2 id="lesson-title">Lesson</h2>
+      <span></span>
+    </div>
+    <div class="lesson-body" id="lesson-body"></div>
+    <div class="lesson-footer">
+      <button class="lesson-practice-btn" id="lesson-practice-btn" onclick="startCategorySession()">
+        ▶ Practice These Words
+      </button>
     </div>
   </div>
 
@@ -215,6 +251,10 @@
   <button class="nav-btn" data-screen="words" onclick="showScreen('words')">
     <span class="nav-icon">📚</span>
     <span>Words</span>
+  </button>
+  <button class="nav-btn" data-screen="courses" onclick="showScreen('courses')">
+    <span class="nav-icon">🎓</span>
+    <span>Courses</span>
   </button>
   <button class="nav-btn" data-screen="ask" onclick="showScreen('ask')">
     <span class="nav-icon">💬</span>

@@ -16,8 +16,12 @@ let session = {
   timerInterval: null,
   timeLeft: 900,
   correct: 0,
-  revealed: false
+  revealed: false,
+  mode: 'normal' // 'normal' or 'listen'
 };
+
+let sessionMode = 'normal'; // selected before session starts
+let slowMode = false;
 
 // ════════════════════════════════════════════════════════════
 // INIT
@@ -91,18 +95,21 @@ function showScreen(name) {
 
   // Bottom nav visibility
   const nav = document.getElementById('bottom-nav');
-  const hideNav = (name === 'session' || name === 'settings');
+  const hideNav = (name === 'session' || name === 'settings' || name === 'lesson');
   nav.classList.toggle('hidden', hideNav);
+  // Lesson screen is part of the Courses tab
+  const navName = (name === 'lesson') ? 'courses' : name;
 
-  // Update active nav button
+  // Update active nav button (lesson screen highlights the Courses button)
   document.querySelectorAll('.nav-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.screen === name);
+    b.classList.toggle('active', b.dataset.screen === navName);
   });
 
   // Per-screen setup
   if (name === 'home') renderHome();
   if (name === 'words') renderWordList('all');
   if (name === 'ask') setupAskScreen();
+  if (name === 'courses') renderCourses();
 }
 
 // ════════════════════════════════════════════════════════════
@@ -135,6 +142,9 @@ function renderHome() {
   const longestEl = document.getElementById('streak-longest');
   if (longestEl) longestEl.textContent = 'Best: ' + state.streak.longest + ' days';
 
+  const noteEl = document.getElementById('session-note');
+  if (noteEl) noteEl.textContent = '~15 minutes · ' + VOCABULARY.length + ' words to learn';
+
   // Check if already did a session today
   const doneToday = state.streak.lastSessionDate === today;
   const startBtn = document.getElementById('start-btn');
@@ -155,14 +165,25 @@ function renderHome() {
 // SESSION
 // ════════════════════════════════════════════════════════════
 
+let activeCategoryFilter = null; // set by startCategorySession()
+
+function startNormalSession() {
+  // Always reset the category filter so home sessions use all words
+  activeCategoryFilter = null;
+  startSession();
+}
+
 function startSession() {
   const today = getTodayStr();
+  const pool = activeCategoryFilter
+    ? VOCABULARY.filter(w => w.category === activeCategoryFilter)
+    : VOCABULARY;
 
   // Build card queue
   let reviewCards = [];
   let newCards = [];
 
-  VOCABULARY.forEach(word => {
+  pool.forEach(word => {
     const p = state.wordProgress[word.id];
     if (!p) return;
     if (p.confidence > 0 && p.confidence < 4 && p.nextReview <= today) {
@@ -178,15 +199,9 @@ function startSession() {
   // Mix: up to 15 reviews + 5 new = 20 cards max
   let cards = [...reviewCards.slice(0, 15), ...newCards.slice(0, 5)];
 
-  // If nothing due, revise some mastered words to keep sharp
+  // If nothing due, revise all words in the pool to keep sharp
   if (cards.length === 0) {
-    const mastered = VOCABULARY.filter(w => (state.wordProgress[w.id]?.confidence || 0) >= 4);
-    cards = shuffle(mastered).slice(0, 10);
-  }
-
-  // Always have at least a few cards
-  if (cards.length === 0) {
-    cards = shuffle([...VOCABULARY]).slice(0, 10);
+    cards = shuffle([...pool]).slice(0, activeCategoryFilter ? pool.length : 10);
   }
 
   session.cards = cards;
@@ -194,10 +209,17 @@ function startSession() {
   session.timeLeft = 900;
   session.correct = 0;
   session.revealed = false;
+  session.mode = sessionMode;
 
   showScreen('session');
   startTimer();
   renderCard();
+}
+
+function startCategorySession() {
+  // activeCategoryFilter was already set by showLesson()
+  showScreen('session');
+  startSession();
 }
 
 function renderCard() {
@@ -215,12 +237,21 @@ function renderCard() {
 
   const word = session.cards[idx];
   const pct = total > 0 ? (idx / total) * 100 : 0;
+  const isListenMode = session.mode === 'listen';
 
   document.getElementById('progress-fill').style.width = pct + '%';
   document.getElementById('progress-label').textContent = idx + ' / ' + total;
 
-  document.getElementById('card-tag').textContent = word.partOfSpeech.toUpperCase();
-  document.getElementById('card-german').textContent = word.german;
+  document.getElementById('card-tag').textContent = isListenMode ? '👂 LISTENING' : word.partOfSpeech.toUpperCase();
+
+  const germanEl = document.getElementById('card-german');
+  if (isListenMode) {
+    germanEl.textContent = '— tap 🔊 to hear, then choose —';
+    germanEl.classList.add('listen-hidden');
+  } else {
+    germanEl.textContent = word.german;
+    germanEl.classList.remove('listen-hidden');
+  }
 
   // Build 3 options: correct + 2 random wrong answers
   const options = buildOptions(word);
@@ -270,22 +301,33 @@ function selectOption(selectedId) {
   p.lastSeen = today;
   saveState();
 
-  // Show feedback with example sentence
+  // Reveal the German word if we were in listen mode
+  if (session.mode === 'listen') {
+    const germanEl = document.getElementById('card-german');
+    germanEl.textContent = correctWord.german;
+    germanEl.classList.remove('listen-hidden');
+  }
+
+  // Show feedback with example sentence + audio button
   const bar = document.getElementById('feedback-bar');
+  const safeExample = correctWord.exampleDE.replace(/"/g, '&quot;');
   if (isCorrect) {
     bar.className = 'feedback-bar correct';
-    bar.innerHTML = `✓ Correct! &nbsp;<em>${correctWord.exampleDE}</em>`;
+    bar.innerHTML = `✓ Correct! &nbsp;<em>${correctWord.exampleDE}</em> <button class="feedback-audio-btn" onclick="speakText(this.dataset.text)" data-text="${safeExample}">🔊</button>`;
   } else {
     bar.className = 'feedback-bar wrong';
-    bar.innerHTML = `✗ It was: <strong>${correctWord.english}</strong> &nbsp;·&nbsp; <em>${correctWord.exampleDE}</em>`;
+    bar.innerHTML = `✗ It was: <strong>${correctWord.english}</strong> &nbsp;·&nbsp; <em>${correctWord.exampleDE}</em> <button class="feedback-audio-btn" onclick="speakText(this.dataset.text)" data-text="${safeExample}">🔊</button>`;
   }
   bar.classList.remove('hidden');
 
-  // Auto-advance after 1.6 seconds
+  // Auto-play the example sentence so you hear it in context every time
+  speakText(correctWord.exampleDE);
+
+  // Longer delay to let the sentence play before advancing
   setTimeout(() => {
     session.currentIndex++;
     renderCard();
-  }, 1600);
+  }, 3500);
 }
 
 // ── Timer ─────────────────────────────────────────────────
@@ -373,7 +415,7 @@ function speakText(text) {
   window.speechSynthesis.cancel();
   const utt = new SpeechSynthesisUtterance(text);
   utt.lang = 'de-DE';
-  utt.rate = 0.85;
+  utt.rate = slowMode ? 0.5 : 0.85;
 
   // On mobile, voices may load late — try to pick a German voice
   const voices = window.speechSynthesis.getVoices();
@@ -395,6 +437,92 @@ function speakCurrentExample() {
 
 function speakWordItem(german) {
   speakText(german);
+}
+
+function setSessionMode(mode) {
+  sessionMode = mode;
+  document.getElementById('mode-normal').classList.toggle('active', mode === 'normal');
+  document.getElementById('mode-listen').classList.toggle('active', mode === 'listen');
+}
+
+function toggleSlowMode() {
+  slowMode = !slowMode;
+  const btn = document.getElementById('slow-mode-btn');
+  if (btn) btn.classList.toggle('active', slowMode);
+}
+
+// ════════════════════════════════════════════════════════════
+// COURSES SCREEN
+// ════════════════════════════════════════════════════════════
+
+function renderCourses() {
+  const container = document.getElementById('courses-list');
+  if (!container) return;
+
+  container.innerHTML = COURSES.map(course => {
+    const words = VOCABULARY.filter(w => w.category === course.id);
+    const wordCount = words.length;
+    const learned = words.filter(w => (state.wordProgress[w.id]?.confidence || 0) >= 4).length;
+    const pct = wordCount > 0 ? Math.round((learned / wordCount) * 100) : 0;
+
+    return `
+      <div class="course-card" onclick="showLesson('${course.id}')">
+        <div class="course-card-left">
+          <span class="course-emoji">${course.emoji}</span>
+          <div class="course-card-info">
+            <div class="course-card-title">${course.title}</div>
+            <div class="course-card-meta">${wordCount} word${wordCount !== 1 ? 's' : ''} · ${pct}% mastered</div>
+          </div>
+        </div>
+        <div class="course-progress-ring">
+          <svg viewBox="0 0 36 36" class="ring-svg">
+            <circle cx="18" cy="18" r="15" class="ring-bg"/>
+            <circle cx="18" cy="18" r="15" class="ring-fill"
+              style="stroke-dasharray: ${Math.round(pct * 0.942)} 94.2;"/>
+          </svg>
+          <span class="ring-label">${pct}%</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function showLesson(categoryId) {
+  const course = COURSES.find(c => c.id === categoryId);
+  if (!course) return;
+
+  activeCategoryFilter = categoryId;
+
+  const words = VOCABULARY.filter(w => w.category === categoryId);
+  const wordCount = words.length;
+  const learned = words.filter(w => (state.wordProgress[w.id]?.confidence || 0) >= 4).length;
+
+  document.getElementById('lesson-title').textContent = course.emoji + ' ' + course.title;
+
+  const wordPills = words.map(w =>
+    `<span class="word-pill">${w.german}</span>`
+  ).join('');
+
+  document.getElementById('lesson-body').innerHTML = `
+    <div class="lesson-section lesson-intro">
+      <p>${course.intro}</p>
+    </div>
+    <div class="lesson-section lesson-grammar">
+      <div class="lesson-section-label">📐 Grammar note</div>
+      <p>${course.grammarNote}</p>
+    </div>
+    <div class="lesson-section lesson-tip">
+      <div class="lesson-section-label">💡 Tip</div>
+      <p>${course.tip}</p>
+    </div>
+    <div class="lesson-section lesson-words">
+      <div class="lesson-section-label">📖 Words in this topic (${wordCount})</div>
+      <div class="word-pills">${wordPills}</div>
+      <div class="lesson-mastered">${learned} of ${wordCount} mastered</div>
+    </div>
+  `;
+
+  showScreen('lesson');
 }
 
 // ════════════════════════════════════════════════════════════
@@ -436,17 +564,21 @@ function renderWordList(filter) {
     const p = state.wordProgress[word.id];
     const conf = p?.confidence ?? 0;
     const stars = buildStars(conf);
-    // Escape for data attribute
     const safeGerman = word.german.replace(/"/g, '&quot;');
+    const safeExample = word.exampleDE.replace(/"/g, '&quot;');
     return `
       <div class="word-item">
         <div class="word-item-top">
           <span class="word-german">${word.german}</span>
           <span class="word-stars">${stars}</span>
-          <button class="word-audio-btn" onclick="speakWordItem(this.dataset.german)" data-german="${safeGerman}" title="Hear it">🔊</button>
+          <div class="word-audio-group">
+            <button class="word-audio-btn" onclick="speakWordItem(this.dataset.german)" data-german="${safeGerman}" title="Hear word">🔊 Word</button>
+            <button class="word-sentence-btn" onclick="speakText(this.dataset.text)" data-text="${safeExample}" title="Hear sentence">🔊 Sentence</button>
+          </div>
         </div>
         <div class="word-english">${word.english}</div>
         <div class="word-example">${word.exampleDE}</div>
+        <div class="word-example-en">${word.exampleEN}</div>
       </div>
     `;
   }).join('');

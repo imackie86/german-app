@@ -872,8 +872,328 @@ body {
   color: var(--primary);
 }
 
+/* ── MODE TOGGLE (home screen) ───────────────────────────── */
+
+.mode-toggle {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 16px 0 8px;
+}
+
+.mode-btn {
+  flex: 1;
+  max-width: 160px;
+  padding: 10px 16px;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  background: var(--card);
+  color: var(--muted);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mode-btn.active {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: #fff;
+}
+
+/* ── SLOW MODE BUTTON (session bar) ──────────────────────── */
+
+.slow-mode-btn {
+  background: none;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  font-size: 1.3rem;
+  cursor: pointer;
+  padding: 2px 6px;
+  transition: all 0.2s;
+  opacity: 0.5;
+}
+
+.slow-mode-btn.active {
+  opacity: 1;
+  border-color: var(--primary);
+  background: rgba(99,102,241,0.12);
+}
+
+/* ── LISTENING MODE CARD ─────────────────────────────────── */
+
+.card-german.listen-hidden {
+  color: var(--muted);
+  font-size: 1rem;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+/* ── SECOND AUDIO BUTTON (sentence) ─────────────────────── */
+
+.audio-btn-sentence {
+  background: rgba(99,102,241,0.1);
+}
+
+/* ── FEEDBACK AUDIO BUTTON ───────────────────────────────── */
+
+.feedback-audio-btn {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0 4px;
+  vertical-align: middle;
+  opacity: 0.8;
+}
+
+.feedback-audio-btn:hover {
+  opacity: 1;
+}
+
+/* ── WORDS SCREEN — sentence audio ──────────────────────── */
+
+.word-audio-group {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.word-audio-btn,
+.word-sentence-btn {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.word-sentence-btn {
+  background: rgba(99,102,241,0.08);
+  border-color: rgba(99,102,241,0.3);
+}
+
+.word-example-en {
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-top: 2px;
+  font-style: italic;
+}
+
 /* ── UTILITIES ───────────────────────────────────────────── */
 
 .hidden {
   display: none !important;
+}
+
+/* ── COURSES SCREEN ──────────────────────────────────────── */
+
+.courses-intro {
+  padding: 0 16px 12px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.courses-list {
+  padding: 0 16px 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.course-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  border: 1.5px solid var(--border);
+}
+
+.course-card:active {
+  transform: scale(0.98);
+  box-shadow: none;
+}
+
+.course-card-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.course-emoji {
+  font-size: 2rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.course-card-title {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.course-card-meta {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* Progress ring */
+.course-progress-ring {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+}
+
+.ring-svg {
+  width: 44px;
+  height: 44px;
+  transform: rotate(-90deg);
+}
+
+.ring-bg {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 3;
+}
+
+.ring-fill {
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: 3;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.4s ease;
+}
+
+.ring-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+/* ── LESSON SCREEN ───────────────────────────────────────── */
+
+.lesson-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 16px 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.lesson-section {
+  border-radius: 14px;
+  padding: 16px;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.lesson-section-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  opacity: 0.7;
+}
+
+.lesson-intro {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.lesson-grammar {
+  background: #EFF6FF;
+  border: 1.5px solid #BFDBFE;
+}
+
+.lesson-grammar .lesson-section-label {
+  color: var(--primary-dark);
+}
+
+.lesson-tip {
+  background: #FFFBEB;
+  border: 1.5px solid #FDE68A;
+}
+
+.lesson-tip .lesson-section-label {
+  color: #92400E;
+}
+
+.lesson-words {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+}
+
+.word-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 4px;
+}
+
+.word-pill {
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid #BFDBFE;
+}
+
+.lesson-mastered {
+  margin-top: 10px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.lesson-footer {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  padding: 12px 16px 28px;
+  background: white;
+  border-top: 1px solid var(--border);
+  z-index: 10;
+}
+
+.lesson-practice-btn {
+  width: 100%;
+  padding: 16px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.lesson-practice-btn:active {
+  background: var(--primary-dark);
 }
