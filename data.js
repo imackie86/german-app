@@ -1751,6 +1751,222 @@ const VOCABULARY = [
     partOfSpeech: "adjective", category: "quantities",
     exampleDE: "Ich brauche mehr Zeit, um das zu verstehen.",
     exampleEN: "I need more time to understand that."
+  },
+
+  // ── CLOTHING ───────────────────────────────────────────────
+  {
+    id: 281, german: "die Bluse", english: "blouse",
+    partOfSpeech: "noun", category: "clothing",
+    exampleDE: "Ich suche eine weiße Bluse.",
+    exampleEN: "I'm looking for a white blouse."
+  },
+  {
+    id: 282, german: "die Hose", english: "trousers / pants",
+    partOfSpeech: "noun", category: "clothing",
+    exampleDE: "Diese Hose ist zu eng.",
+    exampleEN: "These trousers are too tight."
+  },
+  {
+    id: 283, german: "das Hemd", english: "shirt",
+    partOfSpeech: "noun", category: "clothing",
+    exampleDE: "Er trägt heute ein blaues Hemd.",
+    exampleEN: "He is wearing a blue shirt today."
+  },
+  {
+    id: 284, german: "die Jacke", english: "jacket",
+    partOfSpeech: "noun", category: "clothing",
+    exampleDE: "Zieh dir eine Jacke an, es ist kalt!",
+    exampleEN: "Put a jacket on — it's cold!"
+  },
+  {
+    id: 285, german: "die Jeans", english: "jeans",
+    partOfSpeech: "noun", category: "clothing",
+    exampleDE: "Ich mag Jeans lieber als Röcke.",
+    exampleEN: "I prefer jeans to skirts."
+  },
+  {
+    id: 286, german: "das Kleid", english: "dress",
+    partOfSpeech: "noun", category: "clothing",
+    exampleDE: "Das rote Kleid sieht toll aus!",
+    exampleEN: "The red dress looks great!"
+  },
+  {
+    id: 287, german: "der Mantel", english: "coat",
+    partOfSpeech: "noun", category: "clothing",
+    exampleDE: "Vergiss deinen Mantel nicht!",
+    exampleEN: "Don't forget your coat!"
+  },
+  {
+    id: 288, german: "die Mütze", english: "hat / woolly hat",
+    partOfSpeech: "noun", category: "clothing",
+    exampleDE: "Im Winter trage ich immer eine Mütze.",
+    exampleEN: "In winter I always wear a hat."
+  },
+  {
+    id: 289, german: "der Pullover", english: "jumper / pullover",
+    partOfSpeech: "noun", category: "clothing",
+    exampleDE: "Dieser Pullover ist sehr warm.",
+    exampleEN: "This jumper is very warm."
+  },
+  {
+    id: 290, german: "der Rock", english: "skirt",
+    partOfSpeech: "noun", category: "clothing",
+    exampleDE: "Der Rock ist zu kurz.",
+    exampleEN: "The skirt is too short."
+  },
+  {
+    id: 291, german: "der Schuh", english: "shoe",
+    partOfSpeech: "noun", category: "clothing",
+    exampleDE: "Meine neuen Schuhe drücken.",
+    exampleEN: "My new shoes are too tight."
+  },
+  {
+    id: 292, german: "der Stiefel", english: "boot",
+    partOfSpeech: "noun", category: "clothing",
+    exampleDE: "Sie trägt schwarze Stiefel.",
+    exampleEN: "She is wearing black boots."
+  },
+  {
+    id: 293, german: "das T-Shirt", english: "T-shirt",
+    partOfSpeech: "noun", category: "clothing",
+    exampleDE: "Haben Sie dieses T-Shirt auch in Blau?",
+    exampleEN: "Do you have this T-shirt in blue too?"
+  },
+  {
+    id: 294, german: "tragen", english: "to wear / to carry",
+    partOfSpeech: "verb", category: "clothing",
+    exampleDE: "Was trägst du heute?",
+    exampleEN: "What are you wearing today?"
+  },
+  {
+    id: 295, german: "die Kleidung", english: "clothing",
+    partOfSpeech: "noun", category: "clothing",
+    exampleDE: "Wo finde ich Kleidung für Kinder?",
+    exampleEN: "Where can I find children's clothing?"
+  },
+
+  // ── SCHOOL & EDUCATION ─────────────────────────────────────
+  {
+    id: 296, german: "die Schule", english: "school",
+    partOfSpeech: "noun", category: "school",
+    exampleDE: "Meine Tochter geht schon in die Schule.",
+    exampleEN: "My daughter already goes to school."
+  },
+  {
+    id: 297, german: "die Klasse", english: "class / year group",
+    partOfSpeech: "noun", category: "school",
+    exampleDE: "In meiner Klasse sind zwanzig Schüler.",
+    exampleEN: "There are twenty pupils in my class."
+  },
+  {
+    id: 298, german: "die Hausaufgabe", english: "homework",
+    partOfSpeech: "noun", category: "school",
+    exampleDE: "Hast du deine Hausaufgaben gemacht?",
+    exampleEN: "Have you done your homework?"
+  },
+  {
+    id: 299, german: "die Prüfung", english: "exam / test",
+    partOfSpeech: "noun", category: "school",
+    exampleDE: "Ich habe die Prüfung bestanden!",
+    exampleEN: "I passed the exam!"
+  },
+  {
+    id: 300, german: "das Zeugnis", english: "school report / certificate",
+    partOfSpeech: "noun", category: "school",
+    exampleDE: "Morgen bekommen die Kinder ihr Zeugnis.",
+    exampleEN: "Tomorrow the children get their school reports."
+  },
+  {
+    id: 301, german: "der Kurs", english: "course",
+    partOfSpeech: "noun", category: "school",
+    exampleDE: "Ich mache einen Deutschkurs.",
+    exampleEN: "I am doing a German course."
+  },
+  {
+    id: 302, german: "die Universität", english: "university",
+    partOfSpeech: "noun", category: "school",
+    exampleDE: "Er studiert an der Universität Berlin.",
+    exampleEN: "He studies at the University of Berlin."
+  },
+  {
+    id: 303, german: "studieren", english: "to study (at university)",
+    partOfSpeech: "verb", category: "school",
+    exampleDE: "Was studierst du?",
+    exampleEN: "What are you studying?"
+  },
+  {
+    id: 304, german: "die Note", english: "grade / mark",
+    partOfSpeech: "noun", category: "school",
+    exampleDE: "Sie bekommt immer gute Noten.",
+    exampleEN: "She always gets good grades."
+  },
+  {
+    id: 305, german: "die Aufgabe", english: "task / exercise",
+    partOfSpeech: "noun", category: "school",
+    exampleDE: "Die Aufgabe ist nicht so schwer.",
+    exampleEN: "The task is not that difficult."
+  },
+  {
+    id: 306, german: "das Wörterbuch", english: "dictionary",
+    partOfSpeech: "noun", category: "school",
+    exampleDE: "Kannst du das Wort im Wörterbuch suchen?",
+    exampleEN: "Can you look up the word in the dictionary?"
+  },
+  {
+    id: 307, german: "der Unterricht", english: "lesson / class time",
+    partOfSpeech: "noun", category: "school",
+    exampleDE: "Der Unterricht beginnt um neun Uhr.",
+    exampleEN: "Lessons start at nine o'clock."
+  },
+
+  // ── COMMUNICATION ──────────────────────────────────────────
+  {
+    id: 308, german: "die Nachricht", english: "message / news",
+    partOfSpeech: "noun", category: "communication",
+    exampleDE: "Hast du meine Nachricht bekommen?",
+    exampleEN: "Did you get my message?"
+  },
+  {
+    id: 309, german: "buchstabieren", english: "to spell",
+    partOfSpeech: "verb", category: "communication",
+    exampleDE: "Können Sie Ihren Namen buchstabieren?",
+    exampleEN: "Can you spell your name?"
+  },
+  {
+    id: 310, german: "erklären", english: "to explain",
+    partOfSpeech: "verb", category: "communication",
+    exampleDE: "Können Sie das bitte erklären?",
+    exampleEN: "Can you please explain that?"
+  },
+  {
+    id: 311, german: "das Formular", english: "form (to fill in)",
+    partOfSpeech: "noun", category: "communication",
+    exampleDE: "Füllen Sie bitte das Formular aus.",
+    exampleEN: "Please fill in the form."
+  },
+  {
+    id: 312, german: "die Postkarte", english: "postcard",
+    partOfSpeech: "noun", category: "communication",
+    exampleDE: "Ich schreibe meinen Eltern eine Postkarte.",
+    exampleEN: "I am writing a postcard to my parents."
+  },
+  {
+    id: 313, german: "der Brief", english: "letter",
+    partOfSpeech: "noun", category: "communication",
+    exampleDE: "Ich habe heute einen Brief bekommen.",
+    exampleEN: "I received a letter today."
+  },
+  {
+    id: 314, german: "die Adresse", english: "address",
+    partOfSpeech: "noun", category: "communication",
+    exampleDE: "Können Sie mir Ihre Adresse geben?",
+    exampleEN: "Can you give me your address?"
+  },
+  {
+    id: 315, german: "wiederholen", english: "to repeat",
+    partOfSpeech: "verb", category: "communication",
+    exampleDE: "Können Sie das bitte wiederholen?",
+    exampleEN: "Can you please repeat that?"
   }
 ];
 
@@ -1935,5 +2151,29 @@ const COURSES = [
     intro: 'The most important health phrase: <em>"Ich fühle mich nicht wohl"</em> (I don\'t feel well). To describe pain: <em>"Mir tut ... weh"</em> — <em>"Mir tut der Kopf weh"</em> (My head hurts). In Germany, you need an appointment (<em>einen Termin</em>) for non-emergencies. For minor ailments, a <em>Apotheke</em> (pharmacy) is always an excellent first stop.',
     grammarNote: '<strong>Sich fühlen</strong> (to feel) is a reflexive verb — <em>"Ich fühle mich"</em> (I feel). Other useful reflexive verbs: <em>sich erkälten</em> (to catch a cold), <em>sich erholen</em> (to recover), <em>sich setzen</em> (to sit down). The reflexive pronoun <em>mich/dich/sich</em> always refers back to the subject.',
     tip: 'Germany has compulsory health insurance (<em>Krankenversicherung</em>). Visitors from the UK can use their GHIC card for emergency care. The <em>Apotheke</em> (pharmacy) — identifiable by the red "A" symbol — is always a great first stop for advice and over-the-counter medicine.'
+  },
+  {
+    id: 'clothing',
+    title: 'Clothing',
+    emoji: '👗',
+    intro: 'German clothing vocabulary is essential for shopping. When something doesn\'t fit, say <em>"Das passt mir nicht"</em> (That doesn\'t fit me). To ask for a different size: <em>"Haben Sie das auch in Größe...?"</em>. The most useful shopping verb: <em>"Ich suche..."</em> (I\'m looking for...) followed by the item you need.',
+    grammarNote: 'The verb <strong>tragen</strong> means both "to wear" AND "to carry" — context tells you which. <em>"Er trägt ein Hemd"</em> (He\'s wearing a shirt) vs. <em>"Er trägt den Koffer"</em> (He\'s carrying the suitcase). Note the vowel change: <em>tragen → er trägt</em> (ä in the er/sie/es form).',
+    tip: 'German clothes sizes differ from UK sizes. For example, a UK size 12 dress is a German size 38. Shoes are also different — a UK size 7 is roughly a German size 41. Always check the size label (<em>die Größe</em>) when shopping!'
+  },
+  {
+    id: 'school',
+    title: 'School & Education',
+    emoji: '🎓',
+    intro: 'Education vocabulary comes up constantly — whether you\'re talking about your own studies, children\'s schooling, or learning German itself. Key verbs: <strong>lernen</strong> (to learn/study a subject at school) vs. <strong>studieren</strong> (to study at university). <em>"Ich lerne Deutsch"</em> but <em>"Ich studiere Medizin"</em>.',
+    grammarNote: 'German school grades work the opposite way to English! In Germany, <strong>1 is the best grade</strong> (like an A*) and <strong>6 is the worst</strong> (a fail). So if a German child says they got a 1, that\'s excellent — not a fail! The scale goes: 1 (sehr gut), 2 (gut), 3 (befriedigend), 4 (ausreichend), 5 (mangelhaft), 6 (ungenügend).',
+    tip: 'The word <strong>Kurs</strong> is very versatile — use it for any type of course: <em>Deutschkurs, Schwimmkurs, Tanzkurs</em>. It\'s far more common in everyday speech than the formal <em>Unterricht</em>. If someone asks <em>"Machst du einen Kurs?"</em> — they\'re just asking if you\'re taking any classes.'
+  },
+  {
+    id: 'communication',
+    title: 'Communication',
+    emoji: '✉️',
+    intro: 'These words help you communicate even when things get tricky. The two most useful phrases for language learners: <em>"Können Sie das bitte wiederholen?"</em> (Can you repeat that?) and <em>"Können Sie langsamer sprechen?"</em> (Can you speak more slowly?). Never be embarrassed to use them — native speakers always appreciate the effort.',
+    grammarNote: '<strong>Buchstabieren</strong> (to spell) is a very regular verb: <em>ich buchstabiere, Sie buchstabieren</em>. Germans use a standard spelling alphabet — for example, A = Anton, B = Berta, C = Cäsar. This is called the <em>Buchstabiertafel</em> and is used on the phone to avoid confusion.',
+    tip: 'A very useful phrase for any situation: <em>"Wie bitte?"</em> — this simply means "Pardon?" or "Could you repeat that?" It\'s polite, natural, and used constantly by native speakers. Much better than saying nothing when you didn\'t catch something!'
   }
 ];
